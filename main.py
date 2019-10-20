@@ -9,11 +9,12 @@ clients = [
     },
     {
         'name': 'Henao',
-        'Company': 'Bexter',
-        'Email': 'jhenaohenao@gmail.com',
+        'company': 'Bexter',
+        'email': 'jhenaohenao@gmail.com',
         'position': 'Software engineer and designer',
     }
 ]
+
 
 
 def create_client():
@@ -27,23 +28,17 @@ def create_client():
 
 def list_clients():
     for idx, client in enumerate(clients):
-        print('{uid} | {name} | {company} | {email} | {position}'-format(
-        uid = ixd,
+        print('{uid} | {name} | {company} | {email} | {position}'.format(
+        uid = idx,
         name = client['name'],
         company = client['company'],
         email = client['email'],
-        position = client['position'])
-
-def delete_client(client_name):
-    global clients
-
-    if client_name in clients:
-        clients.remove()
-    else:
-        warning()
+        position = client['position']))
 
 
 def search_client(client_name):
+    global clients
+
     for client in clients:
         if client != client_name:
             continue
@@ -51,12 +46,26 @@ def search_client(client_name):
             return True
 
 
+def delete_client(client_name):
+    global clients
+
+    for client in clients:
+        if client_name == client.get('name'):
+            clients.remove(client)
+            break
+    else:
+        warning()
+
+
 def update_client(client_name, updated_client_name):
     global clients
 
-    if client_name in clients:
-        index = clients.index(client_name)
-        clients[index] = updated_client_name
+    for client in clients:
+        if client_name == client.get('name'):
+            clients.remove(client)
+            new_client = updated_client_name
+            clients.append(new_client)
+
     else:
         warning()
 
@@ -125,7 +134,12 @@ if __name__=='__main__':
 
     elif command == 'U':
         client_name = _get_client_name()
-        updated_client_name = input('What is the updated client name?')
+        updated_client_name = {
+         'name': _get_client_field('name'),
+         'company': _get_client_field('company'),
+         'email': _get_client_field('email'),
+         'position': _get_client_field('position'),
+        }
         update_client(client_name, updated_client_name)
         list_clients()
     elif command == 'L':
