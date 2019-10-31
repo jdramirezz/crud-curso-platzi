@@ -1,13 +1,13 @@
-import csv
+import csv #Libreria que permite tener funciones y objetos utiles para manipular archivos .csv
 import os
 
-CLIENT_TABLE = '.clients.csv'
-CLIENT_SCHEMA = ['name', 'company', 'email', 'position']
-clients = []
+CLIENT_TABLE = '.clients.csv' #Variable que almacena el archivo donde se creo la base de datos y a donde se van agregando nuevos elementos
+CLIENT_SCHEMA = ['name', 'company', 'email', 'position'] #Elementos de identificación de cada usuario
+clients = [] #Lista que se utiliza para manipular los datos
 
 
-def create_client(client):
-    global clients
+def create_client(client): #Función que permite crear un cliente
+    global clients #Esta palabra reservada permite traer la variable clients que ha sido declarada fuera del scope de la función
 
     if client not in clients:
         clients.append(client)
@@ -15,7 +15,7 @@ def create_client(client):
         print('Client is already in client\s list')
 
 
-def list_clients():
+def list_clients(): #Función para mostrar los clientes que están en la base de datos
     print('uid |  name  | company  | email  | position ')
     print('*' * 50)
 
@@ -28,16 +28,16 @@ def list_clients():
         position = client['position']))
 
 
-def update_client(client_id, updated_client):
+def update_client(client_id, updated_client): #Función para actualizar la información de un cliente
     global clients
 
-    if len(clients) - 1 >= client_id:
+    if len(clients) - 1 >= client_id:  #Este condicional permite rastrear el usuario al que se le modificarán los datos a partir del id
         clients[client_id] = updated_client
     else:
         print('Client not in client\'s list')
 
 
-def delete_client(client_name):
+def delete_client(client_name): #Función para eliminar cliente
     global clients
 
     for idx, client in enumerate(clients):
@@ -48,7 +48,7 @@ def delete_client(client_name):
         warning()
 
 
-def search_client(client_name):
+def search_client(client_name): #Función para buscar cliente
     for client in clients:
         if client['name'] != client_name:
             continue
@@ -57,7 +57,7 @@ def search_client(client_name):
 
 
 
-def _get_client_field(field_name, message='What is the client {}?'):
+def _get_client_field(field_name, message='What is the client {}?'): #Obtener datos del usuario
     field = None
 
     while not field:
@@ -77,16 +77,16 @@ def _get_client_from_user():
     return client
 
 
-def _initialize_clients_from_storage():
-    with open(CLIENT_TABLE, mode='r') as f:
-        reader = csv.DictReader(f, fieldnames=CLIENT_SCHEMA)
+def _initialize_clients_from_storage(): #Esta función declara un context manager para manipular el archivo csv
+    with open(CLIENT_TABLE, mode='r') as f: #Esta es la sintaxis de un context manager
+        reader = csv.DictReader(f, fieldnames=CLIENT_SCHEMA) #Esta variable permite explorar el archivo asumiendo cada elemento de la base de datos como un diccionario
 
         for row in reader:
             clients.append(row)
 
 
 def _save_clients_to_storage():
-    tmp_table_name = '{}.tmp'.format(CLIENT_TABLE)
+    tmp_table_name = '{}.tmp'.format(CLIENT_TABLE) #Se crea un archivo temporal que va a contener los nuevos elementos que se agreguen por que es necesario reemplazar el archivo inicial con este nuevo dado que una vez se cierra el programa, los cambios guardados no se registrarian de otra forma
     with open(tmp_table_name, mode='w') as f:
         writer = csv.DictWriter(f, fieldnames=CLIENT_SCHEMA)
         writer.writerows(clients)
@@ -111,7 +111,7 @@ def _print_welcome():
 
 
 
-if __name__=='__main__':
+if __name__=='__main__': #Esta es una sintaxis especial de python que inicializa el programa
     _initialize_clients_from_storage()
     _print_welcome()
 
